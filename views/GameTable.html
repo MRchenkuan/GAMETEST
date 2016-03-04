@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+    <script src="/javascripts/jq.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+</head>
+<style>
+    .tag{width: 250px;height: 350px;box-shadow: #a1a1a1 0 0 10px 1px;margin: 50px;float: left;position: relative;border-radius: 5px;}
+    .tag>div[class='progress']{}
+    .tag>span{margin: 10px;}
+</style>
+<body>
+    <div id="1" class="tag">
+        <span class="label label-default">回合结束</span>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0;transition: none">
+                <span class="sr-only">45% Complete</span>
+            </div>
+        </div>
+    </div>
+    <div id="2" class="tag">
+        <span class="label label-default">回合结束</span>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0;transition: none">
+                <span class="sr-only">45% Complete</span>
+            </div>
+        </div>
+    </div>
+    <div id="3" class="tag">
+        <span class="label label-default">回合结束</span>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0;transition: none">
+                <span class="sr-only">45% Complete</span>
+            </div>
+        </div>
+    </div>
+    <div id="4" class="tag">
+        <span class="label label-default">回合结束</span>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0;transition: none">
+                <span class="sr-only">45% Complete</span>
+            </div>
+        </div>
+    </div>
+    <div id="5" class="tag">
+        <span class="label label-default">回合结束</span>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0;transition: none">
+                <span class="sr-only">45% Complete</span>
+            </div>
+        </div>
+    </div>
+    <div id="6" class="tag">
+        <span class="label label-default">回合结束</span>
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0;transition: none">
+                <span class="sr-only">45% Complete</span>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $.ajax({
+        url:"/getinfo?id=01",
+        success:refreshPage
+    });
+
+    function refreshPage(data){
+        $("[role='progressbar']").not(":animated").css({width:0});
+        $(".tag>span").text("回合结束");
+        $("#"+data.roundOwner+">span").text(data.stage);
+        $("#"+data.roundOwner).find("[role='progressbar']").stop().animate({width:"100%"},10000*(100-data.currentStage)/100,"linear");
+
+        setTimeout(function(){
+            $.ajax({
+                url:"/getinfo?id=01",
+                success:refreshPage
+            });
+        },500)
+    }
+</script>
+</html>

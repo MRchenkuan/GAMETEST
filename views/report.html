@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+    <script src="/javascripts/jq.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <style>
+    </style>
+{% endblock %}
+
+{% block title %}
+    index {{ title }}
+{% endblock %}
+
+{% block content %}
+   <pre>
+       {{ data }}
+   </pre>
+
+{% endblock %}
