@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+    <script src="/javascripts/jq.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+</head>
+<style>
+    .tag{background-size: cover;width: 200px;height: 300px;box-shadow: #a1a1a1 0 0 10px 1px;margin: 50px;float: left;position: relative;border-radius: 5px;}
+    .tag>div[class='progress']{}
+    .tag>span{margin: 10px;}
+</style>
+<body>
+<pre>
+       {{ data }}
+</pre>
+    <div id="1" class="tag">
+
+    </div>
+    <div id="2" class="tag">
+
+    </div>
+    <div id="3" class="tag">
+
+    </div>
+    <div id="4" class="tag">
+
+    </div>
+    <div id="5" class="tag">
+
+    </div>
+    <div id="6" class="tag">
+
+    </div>
+</body>
+<script>
+
+    (function refreshPage(data){
+        if(data){
+            for(var i=0;i<data.players.length;i++){
+                var player = data.players[i];
+                var playerBox = $("#"+(i+1));
+                playerBox.css({backgroundImage:"url(images/avt/" +player.avt+")"});
+            }
+        }
+
+        setTimeout(function(){
+            $.ajax({
+                url:"/getinfo?id={{ gameid }}",
+                success:refreshPage
+            });
+        },500)
+    })()
+</script>
+</html>

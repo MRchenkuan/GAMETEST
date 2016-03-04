@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
 </head>
 <style>
-    .tag{width: 250px;height: 350px;box-shadow: #a1a1a1 0 0 10px 1px;margin: 50px;float: left;position: relative;border-radius: 5px;}
+    .tag{background-size: cover;width: 200px;height: 300px;box-shadow: #a1a1a1 0 0 10px 1px;margin: 50px;float: left;position: relative;border-radius: 5px;}
     .tag>div[class='progress']{}
     .tag>span{margin: 10px;}
 </style>
@@ -64,19 +64,32 @@
 </body>
 <script>
     $.ajax({
-        url:"/getinfo?id=01",
+        url:"/getinfo?id={{ gameid }}",
         success:refreshPage
     });
 
+    var stageMap = {"1":"摸牌阶段","2":"出牌阶段","3":"弃牌阶段"};
+    var stageClassMap = {"1":"info","2":"success","3":"danger"};
+    var allTag = $(".tag>span");
     function refreshPage(data){
+        if(data){
+            for(var i=0;i<data.players.length;i++){
+                var player = data.players[i];
+                var playerBox = $("#"+(i+1));
+                playerBox.css({backgroundImage:"url(images/avt/" +player.avt+")"});
+            }
+        }
         $("[role='progressbar']").not(":animated").css({width:0});
-        $(".tag>span").text("回合结束");
-        $("#"+data.roundOwner+">span").text(data.stage);
+        allTag.text("回合结束");
+        allTag.className = "label label-default";
+        var nowTag = $("#"+data.roundOwner+">span");
+        nowTag.text(stageMap[data.stage]);
+        nowTag.className="label label-"+stageClassMap[data.stage];
         $("#"+data.roundOwner).find("[role='progressbar']").stop().animate({width:"100%"},10000*(100-data.currentStage)/100,"linear");
 
         setTimeout(function(){
             $.ajax({
-                url:"/getinfo?id=01",
+                url:"/getinfo?id={{ gameid }}",
                 success:refreshPage
             });
         },500)

@@ -18,13 +18,11 @@ GamePools.prototype = {
 
             // 当线程可用时,创建游戏
             var game = new Game(option);
-            console.log(game);
             self.POOLS[option.gameid] = game;
             self.POOLS.length++;
 
             // 确定游戏的线程号
             game.PoolId =option.gameid;
-            console.log(this.POOLS);
             // 返回游戏
             return game;
         }else{
