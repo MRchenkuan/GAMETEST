@@ -14,6 +14,11 @@ function Player(option){
     this.avt=option.avt||"01.jpeg";
     this.stage = 0;
     this.gameid=null;
+    this.shengjuan = 4;// 圣眷
+    this.handPile = [];// 手牌
+    this.mensheng = [];// 门生牌
+    this.zouzhang = [];// 奏章牌
+
 }
 
 /**

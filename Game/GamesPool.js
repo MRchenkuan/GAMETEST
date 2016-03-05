@@ -36,9 +36,16 @@ GamePools.prototype = {
      */
     killGame:function(gameId){
         this.POOLS.remove(gameId);
+        this.POOLS.length--;
         return gameId;
     },
+    /**
+     * 游戏池
+     */
     POOLS:{length:0},
+    /**
+     * 游戏池的最大容量
+     */
     MAX_POOLS_SIZE:20
 };
 

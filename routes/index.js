@@ -6,9 +6,9 @@ var Msg = require('../Game/Msg.js');
 var Player = require('../Game/Player.js');
 
 // 游戏池加载
-var GamePools = require('../Game/GamePools.js');
+var GamePools = require('../Game/GamesPool.js');
 
-// 游戏临时对象
+// 临时用户对象
 var _data = {
     users:{
         '01':"01.jpeg",
@@ -37,7 +37,6 @@ router.get("/game-:gameid",function(req,res,next){
  */
 router.get("/getinfo",function(req,res,next){
     var gameid = req.query['id'];
-    var data = req.query;
     console.log(gameid);
     if(!gameid){return res.send(new Msg("请传入游戏id"))}
     if(!GamePools.POOLS[gameid]){return res.send(new Msg("游戏不存在"))}
@@ -45,8 +44,11 @@ router.get("/getinfo",function(req,res,next){
     res.send(game);
 });
 
-router.get("/info",function(req,res,next){
-    var gameid = req.query['id'];
+/**
+ * 获取游戏信息
+ */
+router.get("/info-:id",function(req,res,next){
+    var gameid = req.params['id'];
     var data = req.query;
     console.log(gameid);
     if(!gameid){return res.send(new Msg("请传入游戏id"))}
@@ -89,7 +91,6 @@ router.get("/create-:gameid-:id",function(req,res,next){
 /**
  * 加入一个游戏
  */
-
 router.get("/join-:gameid-:uid",function(req,res,next){
     var game = GamePools.POOLS[req.params.gameid];
     if(!game)return res.send(new Msg("游戏不存在"));
@@ -110,7 +111,6 @@ router.get("/join-:gameid-:uid",function(req,res,next){
 /**
  * 开始游戏
  */
-
 router.get("/start-:gameid",function(req,res,next){
     var gameid = req.params.gameid;
     console.log(gameid);
