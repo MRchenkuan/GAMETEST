@@ -11,7 +11,12 @@ function Card() {
      * @param argsArr 卡牌数组
      */
     this.add = function (argsArr) {
-        Array.prototype.push.apply(this, argsArr);
+        if(argsArr.length>0){// 兼容单对象和多对象数组
+            Array.prototype.push.apply(this, argsArr);
+        }else{
+            Array.prototype.push.call(this, argsArr);
+
+        }
     };
 
     /**
