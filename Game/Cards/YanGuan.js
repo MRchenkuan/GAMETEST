@@ -44,6 +44,7 @@ function MenSheng(count){
     if(typeof count ==="number") return this.createCards(arguments.callee,count);
     this.name = "门生";
     this.power = 1;
+    this.available = true;
 }
 
 YuShi.prototype = DuYuShi.prototype = MenSheng.prototype = new YanGuan();

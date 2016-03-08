@@ -122,7 +122,7 @@ router.get("/start-:gameid",function(req,res,next){
         return res.send(new Msg("游戏不存在,请换个ID",GamePools));
     }
     var rst = game.start();
-    res.render('report',{"data":JSON.stringify(new Msg(rst,game), null, 4)});
+    res.render('GameTable',{"gameid":gameid});
 });
 
 /**
@@ -134,8 +134,12 @@ router.get("/usercard-:gameid-:uid-:target",function(req,res,next){
     var target = req.params.target;
 });
 
-
-
+/**
+ * 游戏首页
+ */
+router.get("/home",function(req,res,next){
+    res.render("GameTable-frame")
+});
 
 
 

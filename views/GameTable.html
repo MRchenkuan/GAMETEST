@@ -11,6 +11,7 @@
     .tag{background-size: cover;width: 200px;height: 300px;box-shadow: #a1a1a1 0 0 10px 1px;margin: 50px;float: left;position: relative;border-radius: 5px;}
     .tag>div[class='progress']{}
     .tag>span{margin: 10px;}
+    .shoupai{width: 100%;height:80px;background: #fff;position: absolute;bottom: 0}
 </style>
 <body>
     <div id="1" class="tag">
@@ -20,6 +21,7 @@
                 <span class="sr-only">45% Complete</span>
             </div>
         </div>
+        <div class="shoupai"></div>
     </div>
     <div id="2" class="tag">
         <span class="label label-default">回合结束</span>
@@ -28,6 +30,8 @@
                 <span class="sr-only">45% Complete</span>
             </div>
         </div>
+        <div class="shoupai"></div>
+
     </div>
     <div id="3" class="tag">
         <span class="label label-default">回合结束</span>
@@ -36,6 +40,8 @@
                 <span class="sr-only">45% Complete</span>
             </div>
         </div>
+        <div class="shoupai"></div>
+
     </div>
     <div id="4" class="tag">
         <span class="label label-default">回合结束</span>
@@ -43,6 +49,8 @@
             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0;transition: none">
                 <span class="sr-only">45% Complete</span>
             </div>
+            <div class="shoupai"></div>
+
         </div>
     </div>
     <div id="5" class="tag">
@@ -52,6 +60,8 @@
                 <span class="sr-only">45% Complete</span>
             </div>
         </div>
+        <div class="shoupai"></div>
+
     </div>
     <div id="6" class="tag">
         <span class="label label-default">回合结束</span>
@@ -60,6 +70,8 @@
                 <span class="sr-only">45% Complete</span>
             </div>
         </div>
+        <div class="shoupai"></div>
+
     </div>
 </body>
 <script>
@@ -77,6 +89,16 @@
                 var player = data.players[i];
                 var playerBox = $("#"+(i+1));
                 playerBox.css({backgroundImage:"url(images/avt/" +player.avt+")"});
+                var Guanzhi = player.guanzhi.name;
+                var Guansheng = player.guansheng.name;
+                var shoupai = [];
+                player.handPile.some(function(it,id,ar){
+                    shoupai.push(it.text)
+                });
+                var text = "【"+Guanzhi+"】<br>";
+                text+="【"+Guansheng+"】<br>";
+                text+=shoupai.join("、");
+                playerBox.find(".shoupai")[0].innerHTML = text;
             }
         }
         $("[role='progressbar']").not(":animated").css({width:0});
@@ -84,7 +106,7 @@
         allTag.className = "label label-default";
         var nowTag = $("#"+data.roundOwner+">span");
         nowTag.text(stageMap[data.stage]);
-        nowTag.className="label label-"+stageClassMap[data.stage];
+        nowTag.attr("class","label label-"+stageClassMap[data.stage]);
         $("#"+data.roundOwner).find("[role='progressbar']").stop().animate({width:"100%"},10000*(100-data.currentStage)/100,"linear");
 
         setTimeout(function(){

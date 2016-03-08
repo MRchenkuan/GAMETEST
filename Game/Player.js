@@ -18,6 +18,8 @@ function Player(option){
     this.handPile = [];// 手牌
     this.mensheng = [];// 门生牌
     this.zouzhang = [];// 奏章牌
+    this.guanzhi = "无";// 官职
+    this.guansheng = "新人";// 官声
 
 }
 
