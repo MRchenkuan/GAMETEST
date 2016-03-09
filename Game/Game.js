@@ -78,28 +78,29 @@ function Game(option){
      * 游戏主循环
      */
     game.run = function(){
-        game.timer.startCount();// 开始游戏计时
+        var self = this;
+        self.timer.startCount();// 开始游戏计时
         var _timer = setInterval(function () {
-            if(!game.actived)clearInterval(_timer);// 游戏生命周期检查
-            game.nowPlayer = game.players[game.roundOwner-1]; // 获取当前玩家
-            game.currentStage = game.timer.getProgress(); // 获取当前阶段的倒计时进度
+            if(!self.actived)clearInterval(_timer);// 游戏生命周期检查
+            self.nowPlayer = self.players[game.roundOwner-1]; // 获取当前玩家
+            self.currentStage = self.timer.getProgress(); // 获取当前阶段的倒计时进度
             //当出牌时间100%时,跳到下一个阶段
-            if(game.currentStage>100){
-                game.nowPlayer.stage++;//玩家阶段+1
-                game.timer.reset(); // 重置计时器
+            if(self.currentStage>100){
+                self.nowPlayer.stage++;//玩家阶段+1
+                self.timer.reset(); // 重置计时器
 
                 // 当玩家阶段大于4时,当前阶段归0,回合加1,移交控制权
-                if(game.nowPlayer.stage>3){
+                if(self.nowPlayer.stage>3){
                     // 轮到下一个玩家
-                    game.round++;game.roundOwner++;
+                    self.round++;self.roundOwner++;
                     // 当当前玩家座位号大于总人数时,回到第一个操作的玩家
-                    if(game.roundOwner>game.players.length){
-                        game.roundOwner=1;
+                    if(self.roundOwner>game.players.length){
+                        self.roundOwner=1;
                     }
                 }
 
             }
-            game.stage = this.stage;// 设置游戏阶段为当前阶段
+            self.stage = self.nowPlayer.stage;// 设置游戏阶段为当前阶段
         },13);
 
 
