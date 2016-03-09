@@ -25,6 +25,7 @@ function Game(option){
     game.stack_zouzhang=[];// 奏章牌堆
     game.discard = [];// 弃牌堆
     game.handLimit =5;// 每位玩家的手牌上限
+    game.nowPlayer=null;
 
     game.over = function(){
         game.isAlive=false;
@@ -68,14 +69,71 @@ function Game(option){
             }
         }
         // 4.开始游戏
-        var _timer = setInterval(function () {
-            if(!game.actived)clearInterval(_timer);// 游戏生命周期检查
-            var player = game.players[game.roundOwner-1];
-            player.play(game);
-        },13);
+        game.run();
 
         return new Msg("游戏运行中...");
     };
+
+    /**
+     * 游戏主循环
+     */
+    game.run = function(){
+        game.timer.startCount();// 开始游戏计时
+        var _timer = setInterval(function () {
+            if(!game.actived)clearInterval(_timer);// 游戏生命周期检查
+            game.nowPlayer = game.players[game.roundOwner-1]; // 获取当前玩家
+            game.currentStage = game.timer.getProgress(); // 获取当前阶段的倒计时进度
+            //当出牌时间100%时,跳到下一个阶段
+            if(game.currentStage>100){
+                game.nowPlayer.stage++;//玩家阶段+1
+                game.timer.reset(); // 重置计时器
+
+                // 当玩家阶段大于4时,当前阶段归0,回合加1,移交控制权
+                if(game.nowPlayer.stage>3){
+                    // 轮到下一个玩家
+                    game.round++;game.roundOwner++;
+                    // 当当前玩家座位号大于总人数时,回到第一个操作的玩家
+                    if(game.roundOwner>game.players.length){
+                        game.roundOwner=1;
+                    }
+                }
+
+            }
+            game.stage = this.stage;// 设置游戏阶段为当前阶段
+        },13);
+
+
+    };
+
+    /**
+     * 游戏计时器
+     */
+    game.timer = {
+        // 重新计时
+        reset:function(){
+            if(!this.startTime)throw "计时器未开始";
+            this.progress = 0;
+            this.startTime = Date.now();
+        },
+        /**
+         * 获取进度百分比，当进度超过100时执行回调
+         * @param callback
+         */
+        getProgress : function(callback){
+            if(!this.startTime)throw "计时器未开始";
+            this.progress =  100*(Date.now()-this.startTime)/10000;
+            if(callback && this.progress>=1){
+                callback()
+            }
+            return this.progress;
+        },
+        // 开始计时
+        startCount:function(){
+            this.startTime = Date.now();
+        },
+        startTime:null,
+        progress:0
+    }
 
 }
 
