@@ -29,10 +29,12 @@ function Player(option){
  */
 Player.prototype = {
     play:function(game){
+        var self = this;
         //if(!this.game){throw "玩家与游戏关联失败!"}
         //var game = this.game;
         if(!game){throw "玩家与游戏关联失败!"}
-        game.currentStage = 100*(Date.now()-game.stageStartTime)/10000; // 当前阶段的倒计时进度
+        // 当前阶段的倒计时进度
+        game.currentStage = 100*(Date.now()-game.stageStartTime)/game.roundTime*1000;
         //当出牌时间大于10秒时,暂停1秒,跳到下一个阶段
         if(game.currentStage>100){
             // 回合加1
@@ -53,6 +55,18 @@ Player.prototype = {
 
         }
         game.stage = this.stage;// 设置游戏阶段为当前阶段
+    },
+
+    /**
+     * 使用卡牌
+     * @param card
+     */
+    use:function(game,card){
+        //使用卡牌
+        card.use();
+        //重置时间
+        game.currentStage=0;
+
     },
 
     pass:function(){

@@ -28,7 +28,6 @@ CardsPool.actions = function(){
     // 言官牌
     cards.add(new YanGuan.DuYuShi(10));
     cards.add(new YanGuan.YuShi(36));
-    //cards.add(new YanGuan.MenSheng(13));
 
     // 钻营牌
     cards.add(new ZuanYin.KouQue(2));
@@ -74,6 +73,12 @@ CardsPool.GuanSheng = function () {
     cards.add(new GuanSheng.Quan());
     cards.add(new GuanSheng.Zhi());
     cards.add(new GuanSheng.Zhong());
+    return cards;
+};
+
+CardsPool.MengSheng = function(){
+    var cards = new Card();
+    cards.add(new YanGuan.MenSheng(13));
     return cards;
 };
 

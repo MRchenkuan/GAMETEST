@@ -5,6 +5,7 @@
 var Msg = require('./Msg.js');
 var CardsPool = require('./CardsPool.js');
 var Player = require('./Player.js');
+var GuanSheng = require('./Cards/GuanSheng.js');
 /**
  * 游戏类
  * @param option
@@ -21,6 +22,9 @@ function Game(option){
     game.PoolId = 0; // 游戏所属线程号
     game.isAlive=true; // 游戏是否活着
     game.actived=false; // 游戏是否正在运行
+    game.handLimit =5;// 每位玩家的手牌上限
+    game.lucky = 5; // 国势 2-10
+    game.roundTime = 15;
 
     game.stack_action=[];// 钻营牌+言官牌堆
     game.stack_zouzhang=[];// 奏章牌堆
@@ -28,8 +32,7 @@ function Game(option){
     game.stack_guansheng = []; //官声牌堆
     game.discard = [];// 弃牌堆
 
-    game.handLimit =5;// 每位玩家的手牌上限
-    game.lucky = 5; // 国势 2-10
+
     game.over = function(){
         game.isAlive=false;
     };
@@ -54,12 +57,16 @@ function Game(option){
         game.stack_zouzhang = new CardsPool.zouzhang();
         game.stack_guanzhi = new CardsPool.GuanZhi();
         game.stack_guansheng = new CardsPool.GuanSheng();
+        game.stack_mengsheng = new CardsPool.MengSheng();
 
         // 洗牌
-        game.stack_action.sort(function(a,b){ return Math.random()>.5 ? -1 : 1;});
-        game.stack_zouzhang.sort(function(a,b){ return Math.random()>.5 ? -1 : 1;});
-        game.stack_guanzhi.sort(function(a,b){ return Math.random()>.5 ? -1 : 1;});
-        game.stack_guansheng.sort(function(a,b){ return Math.random()>.5 ? -1 : 1;});
+        game.stack_action.sort(function(){ return Math.random()>.5 ? -1 : 1;});
+        game.stack_zouzhang.sort(function(){ return Math.random()>.5 ? -1 : 1;});
+        game.stack_guanzhi.sort(function(){ return Math.random()>.5 ? -1 : 1;});
+        game.stack_guansheng.sort(function(){ return Math.random()>.5 ? -1 : 1;});
+        game.stack_mengsheng.sort(function(){ return Math.random()>.5 ? -1 : 1;});
+
+
         // 1.分配玩家座位
         for(var i=0;i<game.players.length;i++){
             game.players[i].setOrder = i;
@@ -67,10 +74,13 @@ function Game(option){
                 return new Msg("人数不足 "+i+" 号位 没人");
             }
         }
+
+
         // 2.设置游戏参数
         game.actived=true;
         // 2.1确定国势
         game.lucky = Math.round(Math.random()*10)||5;
+
 
         // 3.发牌
         for(i=0;i<game.players.length;i++){
@@ -78,8 +88,15 @@ function Game(option){
             // 先发官职和官声牌
             player.guanzhi = game.stack_guanzhi.shift();
             player.guansheng = game.stack_guansheng.shift();
+
+            // 然后分配门生,权臣可以多一个
+            player.mensheng.length = player.guansheng.Type=="权臣"?3:2;
+            for(var k =0;k<player.mensheng.length;k++){
+                player.mensheng[k] = game.stack_mengsheng.shift();
+            }
+
+            // 发钻营牌,每人5张
             for(var j=0;j<game.handLimit;j++){
-                // 先发钻营牌,每人5长
                 player.handPile.push(game.stack_action.shift());
             }
         }
