@@ -101,14 +101,72 @@ function Game(option){
             }
         }
         // 4.开始游戏
-        var _timer = setInterval(function () {
-            if(!game.actived)clearInterval(_timer);// 游戏生命周期检查
-            var player = game.players[game.roundOwner-1];
-            player.play(game);
-        },13);
+        game.run();
 
         return new Msg("游戏运行中...");
     };
+
+    /**
+     * 游戏主循环
+     */
+    game.run = function(){
+        var self = this;
+        self.timer.startCount();// 开始游戏计时
+        var _timer = setInterval(function () {
+            if(!self.actived)clearInterval(_timer);// 游戏生命周期检查
+            self.nowPlayer = self.players[game.roundOwner-1]; // 获取当前玩家
+            self.currentStage = self.timer.getProgress(); // 获取当前阶段的倒计时进度
+            //当出牌时间100%时,跳到下一个阶段
+            if(self.currentStage>100){
+                self.nowPlayer.stage++;//玩家阶段+1
+                self.timer.reset(); // 重置计时器
+
+                // 当玩家阶段大于4时,当前阶段归0,回合加1,移交控制权
+                if(self.nowPlayer.stage>3){
+                    // 轮到下一个玩家
+                    self.round++;self.roundOwner++;
+                    // 当当前玩家座位号大于总人数时,回到第一个操作的玩家
+                    if(self.roundOwner>game.players.length){
+                        self.roundOwner=1;
+                    }
+                }
+
+            }
+            self.stage = self.nowPlayer.stage;// 设置游戏阶段为当前阶段
+        },13);
+
+
+    };
+
+    /**
+     * 游戏计时器
+     */
+    game.timer = {
+        // 重新计时
+        reset:function(){
+            if(!this.startTime)throw "计时器未开始";
+            this.progress = 0;
+            this.startTime = Date.now();
+        },
+        /**
+         * 获取进度百分比，当进度超过100时执行回调
+         * @param callback
+         */
+        getProgress : function(callback){
+            if(!this.startTime)throw "计时器未开始";
+            this.progress =  100*(Date.now()-this.startTime)/10000;
+            if(callback && this.progress>=1){
+                callback()
+            }
+            return this.progress;
+        },
+        // 开始计时
+        startCount:function(){
+            this.startTime = Date.now();
+        },
+        startTime:null,
+        progress:0
+    }
 
 }
 
