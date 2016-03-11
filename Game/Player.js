@@ -28,35 +28,6 @@ function Player(option){
  * @type {{run: Player.run, pass: Player.pass}}
  */
 Player.prototype = {
-    play:function(game){
-        var self = this;
-        //if(!this.game){throw "玩家与游戏关联失败!"}
-        //var game = this.game;
-        if(!game){throw "玩家与游戏关联失败!"}
-        // 当前阶段的倒计时进度
-        game.currentStage = 100*(Date.now()-game.stageStartTime)/game.roundTime*1000;
-        //当出牌时间大于10秒时,暂停1秒,跳到下一个阶段
-        if(game.currentStage>100){
-            // 回合加1
-            console.log(this);
-            this.stage++;
-            // 重置回合时间
-            game.stageStartTime= Date.now();
-            //当阶段大于4时,当前阶段归0,回合加1,移交控制权
-            if(this.stage>3){
-                this.stage=0;
-                // 轮到下一个玩家
-                game.round++;game.roundOwner++;
-                // 当当前玩家座位号大于总人数时,回到第一个操作的玩家
-                if(game.roundOwner>game.players.length){
-                    game.roundOwner=1;
-                }
-            }
-
-        }
-        game.stage = this.stage;// 设置游戏阶段为当前阶段
-    },
-
     /**
      * 使用卡牌
      * @param card
@@ -65,7 +36,7 @@ Player.prototype = {
         //使用卡牌
         card.use();
         //重置时间
-        game.currentStage=0;
+        game.timer.reset();
 
     },
 
